@@ -7,15 +7,13 @@
 
 import UIKit
 
-fileprivate typealias AIEViewControllerViewWillAppearInjectClosure = (UIViewController, Bool)->()
+fileprivate typealias AIEViewControllerViewWillAppearInjectClosure = (UIViewController, Bool) -> Void
 
 class AIENaviPopGestureManager: NSObject, UIGestureRecognizerDelegate {
-    
     class func start() {
         UINavigationController.injectAIENaviPopGestureManagerForUINavigationController()
         UIViewController.injectAIENaviPopGestureManagerForUIViewController()
     }
-    
 }
 
 fileprivate class AIEInteractivePopGestureDelegate: NSObject, UIGestureRecognizerDelegate {
@@ -67,11 +65,11 @@ fileprivate var kAIENaviPopGestureManagerInjectedForUINavigationController = fal
 extension UINavigationController {
     
     var aie_interactivePopGestureRecognizer: UIPanGestureRecognizer {
-        get{
+        get {
             let panGestureRecognizer = objc_getAssociatedObject(self, &kAIEInteractivePopGestureRecognizer) as? UIPanGestureRecognizer
             if let panGestureRecognizer = panGestureRecognizer {
                 return panGestureRecognizer
-            }else{
+            } else {
                 let newGestureRecognizer = UIPanGestureRecognizer()
                 newGestureRecognizer.maximumNumberOfTouches = 1
                 objc_setAssociatedObject(self, &kAIEInteractivePopGestureRecognizer, newGestureRecognizer, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -84,7 +82,7 @@ extension UINavigationController {
         get{
             if let value = objc_getAssociatedObject(self, &kAIENeedAIEControlNaviBarAppearance) as? Bool {
                 return value
-            }else{
+            } else {
                 return true
             }
         }
@@ -94,11 +92,11 @@ extension UINavigationController {
     }
     
     fileprivate var aie_interactivePopGestureRecognizerDelegate: AIEInteractivePopGestureDelegate {
-        get{
+        get {
             let popGestureDelegate = objc_getAssociatedObject(self, &kAIEInteractivePopGestureRecognizerDelegate) as? AIEInteractivePopGestureDelegate
             if let popGestureDelegate = popGestureDelegate {
                 return popGestureDelegate
-            }else{
+            } else {
                 let newPopGestureDelegate = AIEInteractivePopGestureDelegate()
                 newPopGestureDelegate.navigationController = self
                 objc_setAssociatedObject(self, &kAIEInteractivePopGestureRecognizerDelegate, newPopGestureDelegate, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -119,7 +117,7 @@ extension UINavigationController {
             
             if didAddMethod {
                 class_replaceMethod(self, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod))
-            }else{
+            } else {
                 method_exchangeImplementations(originalMethod, swizzledMethod)
             }
             kAIENaviPopGestureManagerInjectedForUINavigationController = true
@@ -195,7 +193,7 @@ extension UIViewController {
             
             if didAddMethod {
                 class_replaceMethod(self, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod))
-            }else{
+            } else {
                 method_exchangeImplementations(originalMethod, swizzledMethod)
             }
             kAIENaviPopGestureManagerInjectedForUIViewController = true
